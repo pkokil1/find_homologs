@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+query_file="$1"
+subject_file="$2"
+output_file="$3"
+
+#pident = percent identity, length = alignment length, $3 is pident
+blastn -query "$query_file" -subject "$subject_file" -outfmt "6 qseqid
+sseqid pident length" | awk '$4 == length && $3 == 100' > "$output_file"
+
+perfect_match_count=$(awk '$4 == length && $3 == 100' "$output_file" | wc -l)
+
+
+echo "Number of Perfect Matches of type I-F CRISPR repeat: $perfect_match_count"
+
+echo "Only perfect matches written to '$output_file'."
